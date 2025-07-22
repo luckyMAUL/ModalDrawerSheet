@@ -72,6 +72,7 @@ val drawerItems = listOf(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExampleWithModalDrawer() {
+    val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -104,7 +105,8 @@ fun ExampleWithModalDrawer() {
                                 .fillMaxWidth()
                                 .padding(vertical = 8.dp)
                                 .clickable {
-                                    // Logika untuk menangani klik item menu
+                                    navController.navigate(item.route)
+
                                     scope.launch {
                                         drawerState.close()
                                     }
@@ -144,25 +146,17 @@ fun ExampleWithModalDrawer() {
                 )
             }
         ) { paddingValues ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                contentAlignment = Alignment.Center
+            NavHost(
+                modifier = Modifier.padding(paddingValues),
+                navController = rememberNavController(),
+                startDestination = "home"
             ) {
-                Text("Konten utama aplikasi")
+                composable("home") { HomeScreen() }
+                composable("profile") { ProfileScreen() }
+                composable("settings") { SettingsScreen() }
+                composable("help") { HelpScreen() }
             }
         }
-    }
-    NavHost(
-        navController = rememberNavController(),
-        startDestination = "home"
-    ) {
-        // Tambahkan rute navigasi di sini
-        composable("home") { HomeScreen() }
-        composable("profile") { ProfileScreen() }
-        composable("settings") { SettingsScreen() }
-        composable("help") { HelpScreen() }
     }
 }
 
